@@ -1,256 +1,175 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
+
+    header("Content-Type: application/json; charset=UTF-8");
+
+    $service = $_POST['service'] ?? '';
+    $number  = $_POST['number'] ?? '';
+
+    if (empty($service) || empty($number)) {
+        echo json_encode(["error"=>"Missing parameters"]);
+        exit;
+    }
+
+    // 🔥 ALL YOUR ORIGINAL SERVICES ADDED
+    $services = [
+
+        "sim-data" => ["url"=>"https://mahisite.xyz/user/API/search.php","userid"=>"12"],
+        "patient-records" => ["url"=>"https://mahisite.xyz/user/API/api-patient.php","userid"=>"12"],
+        "fir-check-punjab" => ["url"=>"https://mahisite.xyz/user/API/api-fircheckpunjab.php","userid"=>"12"],
+        "cro-punjab" => ["url"=>"https://mahisite.xyz/user/API/api-cropunjab.php","userid"=>"12"],
+        "cro-sindh" => ["url"=>"https://mahisite.xyz/user/API/api-crosindh.php","userid"=>"12"],
+        "cnic-to-fir" => ["url"=>"https://mahisite.xyz/user/API/cnic-to-fir.php","userid"=>"12"],
+        "sindh-employees" => ["url"=>"https://mahisite.xyz/user/API/api-sindhemployees.php","userid"=>"12"],
+        "punjab-land" => ["url"=>"https://mahisite.xyz/user/API/api-punjabland.php","userid"=>"12"],
+        "ajk-vehicle" => ["url"=>"https://mahisite.xyz/user/API/api-ajkvehicle.php","userid"=>"12"],
+        "domicile" => ["url"=>"https://mahisite.xyz/user/API/api-domicile.php","userid"=>"12"],
+        "kashmir-tree" => ["url"=>"https://mahisite.xyz/user/API/api-kashmirtree.php","userid"=>"12"],
+
+        "fbr" => ["url"=>"https://khoji2.online/user/API/api-fbr.php","userid"=>"150"],
+        "one-click" => ["url"=>"https://khoji2.online/user/API/api-oneclick.php","userid"=>"150"],
+        "all-in-one-details" => ["url"=>"https://khoji2.online/user/API/api-oneclick-cnic.php","userid"=>"150"],
+    ];
+
+    if (!isset($services[$service])) {
+        echo json_encode(["error"=>"Invalid service"]);
+        exit;
+    }
+
+    $api = $services[$service];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $api['url']);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POST, true);
+
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+        "number"=>$number,
+        "userid"=>$api['userid']
+    ]));
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        echo json_encode(["error"=>"Server Error or No Internet"]);
+    } else {
+        echo json_encode(["success"=>true,"data"=>$response]);
+    }
+
+    curl_close($ch);
+    exit;
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faheem Tracker - All in One Power</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-fade-in-up { animation: fadeInUp 0.5s ease forwards; }
-        
-        body {
-            background: linear-gradient(to bottom right, #0f172a, #581c87, #0f172a);
-            min-height: 100vh;
-        }
-        
-        .bg-pattern {
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE2YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00em0wIDI0YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00ek0xMiAxNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHptMCAyNGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==');
-            opacity: 0.2;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Faheem Tracker</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body {
+    background: linear-gradient(to bottom right, #0f172a, #581c87, #0f172a);
+    min-height: 100vh;
+}
+</style>
 </head>
-<body>
-    <div class="fixed inset-0 bg-pattern"></div>
-    
-    <!-- Login Screen -->
-    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
-        <div class="relative w-full max-w-md">
-            <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-75 animate-pulse"></div>
-            <div class="relative bg-slate-800/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-slate-700">
-                <div class="text-center mb-8">
-                    <div class="inline-block p-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mb-4">
-                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                    </div>
-                    <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-                    <p class="text-slate-400">Sign in to access Faheem Tracker</p>
-                </div>
-                
-                <form id="loginForm" class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Username</label>
-                        <input type="text" id="username" class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition" placeholder="Enter your username" required />
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Password</label>
-                        <input type="password" id="password" class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition" placeholder="Enter your password" required />
-                    </div>
-                    
-                    <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200">
-                        Sign In
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
+<body class="text-white">
 
-    <!-- Main App -->
-    <div id="mainApp" class="hidden min-h-screen">
-        <header class="relative bg-slate-800/50 backdrop-blur-xl border-b border-slate-700 shadow-xl">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Faheem Tracker</h1>
-                            <p class="text-xs text-slate-400">All in One Power</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center space-x-3">
-                        <button id="backButton" class="hidden px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition flex items-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                            <span>Back</span>
-                        </button>
-                        <button id="logoutButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition flex items-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                            <span>Logout</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
+<div class="max-w-7xl mx-auto py-10 px-6">
 
-        <main class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div id="serviceButtons" class="space-y-6">
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-white mb-2">Select a Service</h2>
-                    <p class="text-slate-400">Choose from our comprehensive tracking services</p>
-                </div>
-                <div id="servicesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
-            </div>
+<h1 class="text-4xl font-bold text-center mb-10 text-purple-400">
+Faheem Tracker
+</h1>
 
-            <div id="serviceView" class="hidden max-w-3xl mx-auto">
-                <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl p-8">
-                    <div class="text-center mb-8">
-                        <div id="serviceIcon" class="text-6xl mb-4"></div>
-                        <h2 id="serviceTitle" class="text-3xl font-bold text-white mb-2"></h2>
-                        <p id="serviceDescription" class="text-slate-400"></p>
-                    </div>
-                    
-                    <div id="directIframe" class="hidden bg-white rounded-xl overflow-hidden shadow-inner">
-                        <iframe id="directFrame" class="w-full h-[600px] border-0"></iframe>
-                    </div>
+<!-- SEARCH -->
+<div id="searchSection">
+<input type="text" id="searchInput"
+class="w-full p-4 rounded-xl bg-slate-800 border border-slate-600 mb-3"
+placeholder="Enter CNIC">
 
-                    <div id="searchSection" class="hidden">
-                        <form id="searchForm" class="space-y-6">
-                            <input type="hidden" id="userid" name="userid" />
-                            <div>
-                                <label class="block text-sm font-medium text-slate-300 mb-2">Search Query</label>
-                                <input id="searchInput" name="number" type="text" class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition" required />
-                            </div>
-                            <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200">Search Now</button>
-                            <p class="text-center text-sm text-slate-400">⏳ Please wait a few seconds for results</p>
-                        </form>
-                        <div class="mt-8 bg-white rounded-xl overflow-hidden shadow-inner">
-                            <iframe id="resultFrame" name="result-frame" class="w-full h-[500px] border-0" title="Search Results"></iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+<p class="text-center text-sm text-slate-300 mb-6">
+Wait a few seconds, details are being searched...
+</p>
+</div>
 
-    <script>
-        // Valid users - REPLACE PASSWORDS HERE
-        const validUsers = [
-            { username: "faheem", password: "faheemakhtar@864" },
-            { username: "ayan", password: "faheemakhtar@864" },
-            { username: "sagar", password: "faheemakhtar@864" },
-        ];
+<!-- BUTTON GRID -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
 
-        // Services configuration
-        const services = {
-            "sim-data": { url: "https://mahisite.xyz/user/API/search.php", title: "SIM Data", placeholder: "Enter CNIC Without Dashes And With Dashes", maxlength: 19, description: "Search by CNIC And Number", userid: "12", icon: "📱" },
-            "patient-records": { url: "https://mahisite.xyz/user/API/api-patient.php", title: "Patient Records", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "12", icon: "🏥" },
-            "vehicle-punjab": { title: "Vehicle Punjab", icon: "🚗" },
-            "vehicle-islamabad": { title: "Vehicle Islamabad", icon: "🚙" },
-            "fir-check-punjab": { url: "https://mahisite.xyz/user/API/api-fircheckpunjab.php", title: "FIR Check Punjab", placeholder: "Enter CNIC (with dashes)", maxlength: 19, description: "Search by CNIC With Dashes", userid: "12", icon: "📋" },
-            "cro-punjab": { url: "https://mahisite.xyz/user/API/api-cropunjab.php", title: "CRO Punjab", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "12", icon: "📄" },
-            "cro-sindh": { url: "https://mahisite.xyz/user/API/api-crosindh.php", title: "CRO Sindh", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "12", icon: "📃" },
-            "cnic-to-fir": { url: "https://mahisite.xyz/user/API/cnic-to-fir.php", title: "CNIC to FIR", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "12", icon: "🔍" },
-            "sindh-employees": { url: "https://mahisite.xyz/user/API/api-sindhemployees.php", title: "Sindh Employees", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "12", icon: "👥" },
-            "punjab-land": { url: "https://mahisite.xyz/user/API/api-punjabland.php", title: "Punjab Land", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "12", icon: "🏞️" },
-            "ajk-vehicle": { url: "https://mahisite.xyz/user/API/api-ajkvehicle.php", title: "AJK Vehicle", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "12", icon: "🚕" },
-            "domicile": { url: "https://mahisite.xyz/user/API/api-domicile.php", title: "Domicile", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "12", icon: "🏠" },
-            "kashmir-tree": { url: "https://mahisite.xyz/user/API/api-kashmirtree.php", title: "Kashmir Tree", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "12", icon: "🌳" },
-            "fbr": { url: "https://khoji2.online/user/API/api-fbr.php", title: "FBR", placeholder: "Enter CNIC (17 digits)", maxlength: 17, description: "Search by CNIC", userid: "150", icon: "💼" },
-            "one-click": { url: "https://khoji2.online/user/API/api-oneclick.php", title: "All in One Data", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "150", icon: "⚡" },
-            "all-in-one-details": { url: "https://khoji2.online/user/API/api-oneclick-cnic.php", title: "All in One Details", placeholder: "Enter CNIC", maxlength: 19, description: "Search by CNIC", userid: "150", icon: "🔎" },
-            "fir-copy": { title: "FIR Copy Search", icon: "📑" },
-            "sim-pic": { title: "SIM and Pic Details", icon: "📸" },
-            "faheem-tracker": { title: "Faheem Tracker", url: "https://p01--faheem-tracker2--89q4vtp4hz4m.code.run/tracker.php", icon: "🎯" },
-            "ptcl-data": { title: "PTCL Data", url: "https://p01--ptcl-data--89q4vtp4hz4m.code.run/", icon: "📡" },
-        };
+<button onclick="searchService('sim-data')" class="bg-blue-600 p-4 rounded-xl">📱 SIM Data</button>
+<button onclick="searchService('patient-records')" class="bg-green-600 p-4 rounded-xl">🏥 Patient Records</button>
+<button onclick="searchService('fir-check-punjab')" class="bg-yellow-600 p-4 rounded-xl">📋 FIR Check Punjab</button>
+<button onclick="searchService('cro-punjab')" class="bg-purple-600 p-4 rounded-xl">📄 CRO Punjab</button>
+<button onclick="searchService('cro-sindh')" class="bg-pink-600 p-4 rounded-xl">📃 CRO Sindh</button>
+<button onclick="searchService('cnic-to-fir')" class="bg-indigo-600 p-4 rounded-xl">🔍 CNIC to FIR</button>
+<button onclick="searchService('sindh-employees')" class="bg-teal-600 p-4 rounded-xl">👥 Sindh Employees</button>
+<button onclick="searchService('punjab-land')" class="bg-orange-600 p-4 rounded-xl">🏞️ Punjab Land</button>
+<button onclick="searchService('ajk-vehicle')" class="bg-red-600 p-4 rounded-xl">🚕 AJK Vehicle</button>
+<button onclick="searchService('domicile')" class="bg-cyan-600 p-4 rounded-xl">🏠 Domicile</button>
+<button onclick="searchService('kashmir-tree')" class="bg-emerald-600 p-4 rounded-xl">🌳 Kashmir Tree</button>
+<button onclick="searchService('fbr')" class="bg-gray-600 p-4 rounded-xl">💼 FBR</button>
+<button onclick="searchService('one-click')" class="bg-violet-600 p-4 rounded-xl">⚡ All in One Data</button>
+<button onclick="searchService('all-in-one-details')" class="bg-purple-700 p-4 rounded-xl">🔎 All in One Details</button>
 
-        let currentService = null;
+<!-- SPECIAL IFRAME BUTTONS -->
+<button onclick="openIframe('https://p01--faheem-tracker2--89q4vtp4hz4m.code.run/tracker.php')" 
+class="bg-gradient-to-r from-pink-500 to-purple-600 p-4 rounded-xl shadow-lg">
+🎯 Faheem Tracker
+</button>
 
-        if (localStorage.getItem("loggedIn") === "true") showMainApp();
+<button onclick="openIframe('https://p01--ptcl-data--89q4vtp4hz4m.code.run/')" 
+class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4 rounded-xl shadow-lg">
+📡 PTCL Data
+</button>
 
-        document.getElementById("loginForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            const user = validUsers.find(u => u.username === username && u.password === password);
-            if (user) {
-                localStorage.setItem("loggedIn", "true");
-                showMainApp();
-            } else {
-                alert("Invalid credentials");
-            }
-        });
+</div>
 
-        document.getElementById("logoutButton").addEventListener("click", function() {
-            localStorage.removeItem("loggedIn");
-            location.reload();
-        });
+<!-- RESULT -->
+<div class="bg-white rounded-xl overflow-hidden shadow-inner">
+<iframe id="resultFrame" class="w-full h-[600px] border-0"></iframe>
+</div>
 
-        document.getElementById("backButton").addEventListener("click", function() {
-            showServiceButtons();
-        });
+</div>
 
-        function showMainApp() {
-            document.getElementById("loginScreen").classList.add("hidden");
-            document.getElementById("mainApp").classList.remove("hidden");
-            renderServices();
-        }
+<script>
 
-        function renderServices() {
-            const grid = document.getElementById("servicesGrid");
-            grid.innerHTML = "";
-            Object.entries(services).forEach(([key, service], index) => {
-                const button = document.createElement("button");
-                button.className = "group relative bg-slate-800/50 backdrop-blur-sm hover:bg-slate-700/50 border border-slate-700 hover:border-purple-500 rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 animate-fade-in-up";
-                button.style.animationDelay = `${index * 0.05}s`;
-                button.style.opacity = "0";
-                button.innerHTML = `
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/0 to-pink-600/0 group-hover:from-purple-600/10 group-hover:to-pink-600/10 rounded-xl transition-all duration-300"></div>
-                    <div class="relative">
-                        <div class="text-4xl mb-3">${service.icon}</div>
-                        <h3 class="text-white font-semibold text-lg mb-1">${service.title}</h3>
-                        <div class="h-1 w-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full group-hover:w-full transition-all duration-300"></div>
-                    </div>
-                `;
-                button.addEventListener("click", () => showService(key, service));
-                grid.appendChild(button);
-            });
-        }
+function searchService(service){
 
-        function showService(key, service) {
-            currentService = { ...service, key };
-            document.getElementById("serviceButtons").classList.add("hidden");
-            document.getElementById("serviceView").classList.remove("hidden");
-            document.getElementById("backButton").classList.remove("hidden");
-            document.getElementById("serviceIcon").textContent = service.icon;
-            document.getElementById("serviceTitle").textContent = service.title;
-            document.getElementById("serviceDescription").textContent = service.description || "";
-            
-            if (key === "faheem-tracker" || key === "ptcl-data") {
-                document.getElementById("directIframe").classList.remove("hidden");
-                document.getElementById("searchSection").classList.add("hidden");
-                document.getElementById("directFrame").src = service.url;
-            } else {
-                document.getElementById("directIframe").classList.add("hidden");
-                document.getElementById("searchSection").classList.remove("hidden");
-                if (service.url) {
-                    document.getElementById("searchInput").placeholder = service.placeholder;
-                    document.getElementById("searchInput").maxLength = service.maxlength;
-                    document.getElementById("userid").value = service.userid;
-                    const form = document.getElementById("searchForm");
-                    form.action = service.url;
-                    form.method = "POST";
-                    form.target = "result-frame";
-                }
-            }
-        }
+const number=document.getElementById("searchInput").value.trim();
+if(!number){ alert("Enter CNIC first"); return; }
 
-        function showServiceButtons() {
-            document.getElementById("serviceButtons").classList.remove("hidden");
-            document.getElementById("serviceView").classList.add("hidden");
-            document.getElementById("backButton").classList.add("hidden");
-            currentService = null;
-        }
-    </script>
+const iframe=document.getElementById("resultFrame");
+const doc=iframe.contentDocument || iframe.contentWindow.document;
+
+doc.open();
+doc.write("<h2 style='text-align:center;padding:40px'>Loading... Please wait</h2>");
+doc.close();
+
+const formData=new FormData();
+formData.append("ajax","1");
+formData.append("service",service);
+formData.append("number",number);
+
+fetch("",{method:"POST",body:formData})
+.then(res=>res.json())
+.then(data=>{
+const doc=iframe.contentDocument || iframe.contentWindow.document;
+doc.open();
+if(data.error){
+doc.write("<h2 style='color:red;text-align:center'>"+data.error+"</h2>");
+}else{
+doc.write(data.data);
+}
+doc.close();
+});
+}
+
+function openIframe(url){
+document.getElementById("searchSection").style.display="none";
+document.getElementById("resultFrame").src=url;
+}
+
+</script>
+
 </body>
 </html>
