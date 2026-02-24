@@ -121,6 +121,14 @@ class="bg-gradient-to-r from-pink-500 to-purple-600 p-4 rounded-xl shadow-lg">
 class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4 rounded-xl shadow-lg">
 📡 PTCL Data
 </button>
+    <button onclick="openIframe('https://punjab--e-challan-check--89q4vtp4hz4m.code.run/echallan.php')" 
+class="bg-gradient-to-r from-pink-500 to-purple-600 p-4 rounded-xl shadow-lg">
+🚗 E-Challan-Punjab
+</button>
+   <button onclick="openIframe('https://punjab--vehicle-criminal-record--89q4vtp4hz4m.code.run/vehicle.php')" 
+class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4 rounded-xl shadow-lg">
+🚗 Criminal Vehicle Record
+</button>
 
 </div>
 
