@@ -26,9 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
         "domicile" => ["url"=>"https://mahisite.xyz/user/API/api-domicile.php","userid"=>"12"],
         "kashmir-tree" => ["url"=>"https://mahisite.xyz/user/API/api-kashmirtree.php","userid"=>"12"],
 
-        "fbr" => ["url"=>"https://khoji2.online/user/API/api-fbr.php","userid"=>"150"],
-        "one-click" => ["url"=>"https://khoji2.online/user/API/api-oneclick.php","userid"=>"150"],
-        "all-in-one-details" => ["url"=>"https://khoji2.online/user/API/api-oneclick-cnic.php","userid"=>"150"],
+        "fbr" => ["url"=>"https://khoji2.online/user/API/api-fbr.php","userid"=>"149"],
+        "one-click" => ["url"=>"https://khoji2.online/user/API/api-oneclick.php","userid"=>"149"],
+        "all-in-one-details" => ["url"=>"https://khoji2.online/user/API/api-oneclick-cnic.php","userid"=>"149"],
     ];
 
     if (!isset($services[$service])) {
