@@ -112,20 +112,20 @@ Wait a few seconds, details are being searched...
 <button onclick="searchService('all-in-one-details')" class="bg-purple-700 p-4 rounded-xl">🔎 All in One Details</button>
 
 <!-- SPECIAL IFRAME BUTTONS -->
-<button onclick="openIframe('https://p01--faheem-tracker2--89q4vtp4hz4m.code.run/tracker.php')" 
+<button onclick="openIframe('https://new--faheem-tracker-2--dbsjrhdfmx7y.code.run/tracker.php')" 
 class="bg-gradient-to-r from-pink-500 to-purple-600 p-4 rounded-xl shadow-lg">
 🎯 Faheem Tracker
 </button>
 
-<button onclick="openIframe('https://p01--ptcl-data--89q4vtp4hz4m.code.run/')" 
+<button onclick="openIframe('https://new--ptcl-data--dbsjrhdfmx7y.code.run/')" 
 class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4 rounded-xl shadow-lg">
 📡 PTCL Data
 </button>
-    <button onclick="openIframe('https://punjab--e-challan-check--89q4vtp4hz4m.code.run/echallan.php')" 
+    <button onclick="openIframe('https://new--e-challan-check--dbsjrhdfmx7y.code.run/echallan.php')" 
 class="bg-gradient-to-r from-pink-500 to-purple-600 p-4 rounded-xl shadow-lg">
 🚗 E-Challan-Punjab
 </button>
-   <button onclick="openIframe('https://punjab--vehicle-criminal-record--89q4vtp4hz4m.code.run/vehicle.php')" 
+   <button onclick="openIframe('https://new--vehicle-criminal-record--dbsjrhdfmx7y.code.run/vehicle.php')" 
 class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4 rounded-xl shadow-lg">
 🚗 Criminal Vehicle Record
 </button>
