@@ -14,17 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
     // 🔥 ALL YOUR ORIGINAL SERVICES ADDED
     $services = [
 
-        "sim-data" => ["url"=>"https://mahisite.xyz/user/API/search.php","userid"=>"12"],
-        "patient-records" => ["url"=>"https://mahisite.xyz/user/API/api-patient.php","userid"=>"12"],
-        "fir-check-punjab" => ["url"=>"https://mahisite.xyz/user/API/api-fircheckpunjab.php","userid"=>"12"],
-        "cro-punjab" => ["url"=>"https://mahisite.xyz/user/API/api-cropunjab.php","userid"=>"12"],
-        "cro-sindh" => ["url"=>"https://mahisite.xyz/user/API/api-crosindh.php","userid"=>"12"],
-        "cnic-to-fir" => ["url"=>"https://mahisite.xyz/user/API/cnic-to-fir.php","userid"=>"12"],
-        "sindh-employees" => ["url"=>"https://mahisite.xyz/user/API/api-sindhemployees.php","userid"=>"12"],
-        "punjab-land" => ["url"=>"https://mahisite.xyz/user/API/api-punjabland.php","userid"=>"12"],
-        "ajk-vehicle" => ["url"=>"https://mahisite.xyz/user/API/api-ajkvehicle.php","userid"=>"12"],
-        "domicile" => ["url"=>"https://mahisite.xyz/user/API/api-domicile.php","userid"=>"12"],
-        "kashmir-tree" => ["url"=>"https://mahisite.xyz/user/API/api-kashmirtree.php","userid"=>"12"],
+        "sim-data" => ["url"=>"https://mahisite.xyz/user/API/search.php","userid"=>"13"],
+        "patient-records" => ["url"=>"https://mahisite.xyz/user/API/api-patient.php","userid"=>"13"],
+        "fir-check-punjab" => ["url"=>"https://mahisite.xyz/user/API/api-fircheckpunjab.php","userid"=>"13"],
+        "cro-punjab" => ["url"=>"https://mahisite.xyz/user/API/api-cropunjab.php","userid"=>"13"],
+        "cro-sindh" => ["url"=>"https://mahisite.xyz/user/API/api-crosindh.php","userid"=>"13"],
+        "cnic-to-fir" => ["url"=>"https://mahisite.xyz/user/API/cnic-to-fir.php","userid"=>"13"],
+        "sindh-employees" => ["url"=>"https://mahisite.xyz/user/API/api-sindhemployees.php","userid"=>"13"],
+        "punjab-land" => ["url"=>"https://mahisite.xyz/user/API/api-punjabland.php","userid"=>"13"],
+        "ajk-vehicle" => ["url"=>"https://mahisite.xyz/user/API/api-ajkvehicle.php","userid"=>"13"],
+        "domicile" => ["url"=>"https://mahisite.xyz/user/API/api-domicile.php","userid"=>"13"],
+        "kashmir-tree" => ["url"=>"https://mahisite.xyz/user/API/api-kashmirtree.php","userid"=>"13"],
 
         "fbr" => ["url"=>"https://khoji2.online/user/API/api-fbr.php","userid"=>"21"],
         "one-click" => ["url"=>"https://khoji2.online/user/API/api-oneclick.php","userid"=>"21"],
